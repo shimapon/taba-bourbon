@@ -1,0 +1,37 @@
+name: Calculate lead time
+on:
+  workflow_dispatch: # この行を追加
+
+jobs:
+  calculate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Install pandas
+        run: pip install pandas
+
+      - name: Install matplotlib
+        run: pip install matplotlib
+
+      - name: Run script
+        run: python ./.github/scripts/main.py
+        env:
+          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+
+      - name: Upload results
+        uses: actions/upload-artifact@v2
+        with:
+          name: results
+          path: |
+            ./results.html
+            ./weekly_averages.png
